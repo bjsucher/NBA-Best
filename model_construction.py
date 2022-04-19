@@ -5,24 +5,14 @@ con = sqlite3.connect("C:/Users/jacks/BIOSTAT821/Final_Project/NBA-Best/nba.db")
 
 cur = con.cursor()
 
-# query1 = "SELECT * FROM PlayerStats"
-# test = cur.execute(query1)
-# for i in test:
-#     print(i)
-
-# DECLARE @var1 VARCHAR(255);
-
-# SELECT @var1 = MAX(ThreePointersPct)
-# FROM PlayerStats
-
 
 def get_max(column: str):
     "Get max value for a given variable."
-    # column_iterable = [column]
     max = cur.execute(
         f"""
         SELECT MAX({column}) FROM PlayerStats
-        WHERE ThreePointersAttempted > 2
+        WHERE GamesPlayed > 15
+        AND ThreePointersAttempted > 2
         """,
         # The ThreePointersAttempted variable is actually the average number of
         # 3 pointers attempted per game, so I decied that 2 was a reasonable
@@ -32,21 +22,49 @@ def get_max(column: str):
     return max.fetchone()[0]
 
 
-print(get_max("ThreePointersPct"))
+# print(get_max("ThreePointersPct"))
+# print(get_max("Assists"))
+# print(get_max("Turnovers"))
+print(get_max("Assists / Turnovers"))
+# My idea is to normalize each of the metrics by the maximum value in all of
+# the data, since this is a competition then we can compare individuals to
+# others
 
-# test = cur.execute(
-#     """SELECT MAX(ThreePointersPct) FROM PlayerStats WHERE ThreePointersAttempted > 2"""
-# )
-# print(test.fetchone())
+# The argument could be made that since we are selecting players by position,
+# then we should normalize by the max for a specific metric only among players
+# in that same position, which is very fair. BUT I am going to start more
+# simple than that.
 
+ass_turn = cur.execute(
+    """SELECT Name FROM PlayerStats WHERE (Assists / Turnovers) > 7 AND
+    GamesPlayed > 15 AND ThreePointersAttempted > 2"""
+)
+print(ass_turn.fetchall())
 
-query2 = f"""
-        SELECT ps.Name, Position, ThreePointersPct * 100, ThreePointersPct / {get_max("ThreePointersPct")}
+tyus_jones = cur.execute(
+    """SELECT 
+        GamesPlayed,
+        Assists,
+        Turnovers
+    FROM PlayerStats WHERE Name = 'Tyus Jones'
+    """
+)
+print(tyus_jones.fetchone())
+
+guard_query = f"""
+        SELECT
+            ps.Name,
+            Position,
+            ThreePointersPct * 100,
+            ThreePointersPct / {get_max("ThreePointersPct")},
+            (Assists / Turnovers) / {get_max("Assists / Turnovers")},
+            Steals
         FROM PlayerStats ps
         LEFT JOIN Salary s
         ON ps.Name = s.Name
-        ORDER BY s.Salary2122 DESC
+        WHERE ps.Position IN ('PG', 'SG')
+        ORDER BY s.Salary2122 
         """
-test2 = cur.execute(query2)
-for i in test2:
-    print(i)
+test2 = cur.execute(guard_query)
+# for i in test2:
+#     print(i)
