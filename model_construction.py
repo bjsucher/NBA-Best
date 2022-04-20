@@ -103,6 +103,8 @@ def guard_normalize_query(position: str):
             LEFT JOIN Salary s
             ON ps.Name = s.Name
             WHERE ps.Position IN ({position})
+            AND GamesPlayed > 15
+            AND ThreePointersAttempted > 2
             ORDER BY s.Salary2122
             """
     return query
@@ -125,7 +127,7 @@ con.commit()
 def guard_selections(table: str, number_players: int):
     "Make Selections."
     query = f"""
-    SELECT 
+    SELECT
         Name,
         (j_threes + j_atr + j_stl + j_or + j_ft + j_twos) * (100 / 6) AS rank
     FROM {table}
@@ -174,6 +176,8 @@ def forward_normalize_query(position: str):
             LEFT JOIN Salary s
             ON ps.Name = s.Name
             WHERE ps.Position IN ({position})
+            AND GamesPlayed > 15
+            AND ThreePointersAttempted > 2
             ORDER BY s.Salary2122
             """
     return query
@@ -238,6 +242,8 @@ def center_normalize_query(position: str):
             LEFT JOIN Salary s
             ON ps.Name = s.Name
             WHERE ps.Position IN ({position})
+            AND GamesPlayed > 15
+            AND ThreePointersAttempted > 2
             ORDER BY s.Salary2122
             """
     return query
@@ -334,4 +340,8 @@ for i in all_salary_combos_sum:
 print(min(all_salary_combos_sum))
 # testing = cur.execute("SELECT COUNT(Name) FROM PlayerStats WHERE Position IN ('C')")
 # for i in testing:
+#     print(i)
+
+# test3 = cur.execute("SELECT * FROM GuardsNormalizedStats")
+# for i in test3:
 #     print(i)

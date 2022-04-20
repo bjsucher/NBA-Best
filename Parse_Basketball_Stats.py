@@ -91,7 +91,7 @@ def parse_stats_by_year(year: int):
     return
 
 
-parse_stats_by_year("2022")
+parse_stats_by_year(2022)
 
 con.commit()
 
