@@ -1,6 +1,7 @@
 import sqlite3
 import os
 import requests
+import unidecode
 from bs4 import BeautifulSoup
 
 con = sqlite3.connect("nba.db")
@@ -67,7 +68,9 @@ def parse_stats_by_year(year: int):
             else:
                 player_name = player_data[0].text
                 for i in range(len(player_data)):
-                    if i in [0, 1]:
+                    if i == 0:
+                        player_info.append(unidecode.unidecode(player_data[i].text))
+                    elif i == 1:
                         player_info.append(player_data[i].text)
                     elif i == 3:
                         next
