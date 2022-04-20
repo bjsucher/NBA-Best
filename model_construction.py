@@ -1,5 +1,6 @@
 """Build and compile model."""
 import sqlite3
+from itertools import combinations, product
 
 con = sqlite3.connect("nba.db")
 
@@ -260,7 +261,7 @@ def center_selections(table: str, number_players: int):
     return query
 
 
-center_ranked = cur.execute(center_selections("CentersNormalizedStats", 3))
+center_ranked = cur.execute(center_selections("CentersNormalizedStats", 5))
 for i in center_ranked:
     top5.append(i[0])
     print(i)
@@ -275,6 +276,62 @@ for i in top5:
 # print(sum(salaryTop5))
 
 
+def get_position_combinations(
+    type: str, numPlayers: int, numInLineup: int, salaryYear: int
+):
+    name = []
+    rating = []
+    if type == "guard":
+        data = cur.execute(guard_selections("GuardsNormalizedStats", numPlayers))
+    elif type == "forward":
+        data = cur.execute(forward_selections("ForwardsNormalizedStats", numPlayers))
+    elif type == "center":
+        data = cur.execute(center_selections("CentersNormalizedStats", numPlayers))
+
+    for i in data:
+        name.append(i[0])
+        rating.append(i[1])
+
+    salary = []
+    for i in name:
+        player_salary = cur.execute(
+            f"SELECT Salary{salaryYear} FROM Salary WHERE Name = '{i}'"
+        )
+        for j in player_salary:
+            salary.append(j[0])
+
+    name_combos = list(combinations(name, numInLineup))
+
+    rating_combos = list(combinations(rating, numInLineup))
+    rating_combo_sum = []
+    for i in rating_combos:
+        rating_combo_sum.append(sum(i))
+
+    salary_combos = list(combinations(salary, numInLineup))
+    salary_combo_sum = []
+    for i in salary_combos:
+        salary_combo_sum.append(sum(i))
+
+    all_data = [name_combos, rating_combo_sum, salary_combo_sum]
+
+    return all_data
+
+
+guards = get_position_combinations("guard", 12, 2, 2223)
+forwards = get_position_combinations("forward", 12, 2, 2223)
+centers = get_position_combinations("center", 12, 1, 2223)
+
+all_salary = [guards[2], forwards[2], centers[2]]
+all_salary_combos = list(product(*all_salary))
+all_salary_combos_sum = []
+for i in all_salary_combos:
+    all_salary_combos_sum.append(sum(i))
+
+for i in all_salary_combos_sum:
+    if i < 70000000:
+        print(i)
+
+print(min(all_salary_combos_sum))
 # testing = cur.execute("SELECT COUNT(Name) FROM PlayerStats WHERE Position IN ('C')")
 # for i in testing:
 #     print(i)
