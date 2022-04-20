@@ -26,10 +26,7 @@ salary_table = hhsalaries.find(
 
 body = salary_table.find("tbody")
 all_players = body.find_all("tr")
-# print(all_players[:50])
-# """Create database to store data and open connection"""
-# if os.path.exists("nba.db"):
-#     os.remove("nba.db")
+
 con = sqlite3.connect("nba.db")
 
 cur = con.cursor()
@@ -48,9 +45,9 @@ for player in all_players:
     cur.execute("INSERT INTO Salary VALUES (?, ?)", player_info)
 
 
-nba_table = cur.execute("SELECT * FROM Salary")
-for row in nba_table:
-    print(row)
+# nba_table = cur.execute("SELECT * FROM Salary")
+# for row in nba_table:
+#     print(row)
 
 # print(steph[2].text.strip())
 # print(steph_name.text.strip())
