@@ -44,6 +44,7 @@ for player in all_players:
     player_info = [name.text.strip(), year2122]
     cur.execute("INSERT INTO Salary VALUES (?, ?)", player_info)
 
+con.commit()
 
 # nba_table = cur.execute("SELECT * FROM Salary")
 # for row in nba_table:

@@ -90,6 +90,7 @@ def parse_stats_by_year(year: int):
 
 parse_stats_by_year("2022")
 
+con.commit()
 
 # nba_table = cur.execute("SELECT * FROM PlayerStats")
 # for row in nba_table:
