@@ -34,21 +34,28 @@ cur.execute("DROP TABLE IF EXISTS Salary")
 cur.execute(
     """CREATE TABLE Salary (
                     [Name] VARCHAR(50) PRIMARY KEY,
-                    [Salary2122] INTEGER)"""
+                    [Salary2122] INTEGER,
+                    [Salary2223] INTEGER)"""
 )
 
 for player in all_players:
     player_data = player.find_all("td")
     name = player_data[1].find("a")
     year2122 = int(player_data[2].get("data-value"))
-    player_info = [name.text.strip(), year2122]
-    cur.execute("INSERT INTO Salary VALUES (?, ?)", player_info)
+    if player_data[3].get("data-value") == "0":
+        year2223 = year2122
+    elif float(player_data[3].get("data-value")) < 1:
+        year2223 = int(100000000 * float(player_data[3].get("data-value")))
+    else:
+        year2223 = int(player_data[3].get("data-value"))
+    player_info = [name.text.strip(), year2122, year2223]
+    cur.execute("INSERT INTO Salary VALUES (?, ?, ?)", player_info)
 
 con.commit()
 
-# nba_table = cur.execute("SELECT * FROM Salary")
-# for row in nba_table:
-#     print(row)
+nba_table = cur.execute("SELECT * FROM Salary")
+for row in nba_table:
+    print(row)
 
 # print(steph[2].text.strip())
 # print(steph_name.text.strip())
