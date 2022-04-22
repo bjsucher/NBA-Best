@@ -40,7 +40,8 @@ cur.execute(
 
 for player in all_players:
     player_data = player.find_all("td")
-    name = player_data[1].find("a")
+    name = player_data[1].find("a").text.strip()
+    name = name.replace("'", "")
     year2122 = int(player_data[2].get("data-value"))
     if player_data[3].get("data-value") == "0":
         year2223 = year2122
@@ -48,7 +49,7 @@ for player in all_players:
         year2223 = int(100000000 * float(player_data[3].get("data-value")))
     else:
         year2223 = int(player_data[3].get("data-value"))
-    player_info = [name.text.strip(), year2122, year2223]
+    player_info = [name, year2122, year2223]
     cur.execute("INSERT INTO Salary VALUES (?, ?, ?)", player_info)
 
 con.commit()

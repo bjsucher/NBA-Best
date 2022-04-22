@@ -323,21 +323,70 @@ def get_position_combinations(
     return all_data
 
 
-guards = get_position_combinations("guard", 12, 2, 2223)
-forwards = get_position_combinations("forward", 12, 2, 2223)
-centers = get_position_combinations("center", 12, 1, 2223)
+def select_lineup(
+    num_guard: int,
+    num_forward: int,
+    num_center: int,
+    salaryYear: int,
+    budget: float,
+    budget_choice: str,
+):
+    num_combo = 5
+    output = []
+    while output == []:
+        if num_combo == 25:
+            print("Invalid input. Please try a higher budget or change a field.")
+            break
 
-all_salary = [guards[2], forwards[2], centers[2]]
-all_salary_combos = list(product(*all_salary))
-all_salary_combos_sum = []
-for i in all_salary_combos:
-    all_salary_combos_sum.append(sum(i))
+        guards = get_position_combinations("guard", num_combo, num_guard, salaryYear)
+        forwards = get_position_combinations(
+            "forward", num_combo, num_forward, salaryYear
+        )
+        centers = get_position_combinations("center", num_combo, num_center, salaryYear)
+        num_combo += 1
 
-for i in all_salary_combos_sum:
-    if i < 70000000:
-        print(i)
+        all_name = [guards[0], forwards[0], centers[0]]
+        all_name_combos = list(product(*all_name))
 
-print(min(all_salary_combos_sum))
+        all_salary = [guards[2], forwards[2], centers[2]]
+        all_salary_combos = list(product(*all_salary))
+        all_salary_combos_sum = []
+        for i in all_salary_combos:
+            all_salary_combos_sum.append(sum(i))
+
+        salary_index = []
+        for i in range(len(all_salary_combos_sum)):
+            if all_salary_combos_sum[i] < (budget * 1000000):
+                salary_index.append(i)
+
+        if salary_index == []:
+            continue
+
+        if budget_choice == "Best Lineup":
+            all_rating = [guards[1], forwards[1], centers[1]]
+            all_rating_combos = list(product(*all_rating))
+            all_rating_combos_sum = []
+            for i in all_rating_combos:
+                all_rating_combos_sum.append(sum(i))
+
+            chosen_rating = []
+            for i in salary_index:
+                chosen_rating.append(all_rating_combos_sum[i])
+
+            best_index = all_rating_combos_sum.index(max(chosen_rating))
+            output = [all_name_combos[best_index], all_salary_combos_sum[best_index]]
+
+        elif budget_choice == "Lowest Price":
+            low_index = all_salary_combos_sum.index(min(all_salary_combos_sum))
+            output = [all_name_combos[low_index], all_salary_combos_sum[low_index]]
+
+    return output
+
+
+print(select_lineup(2, 3, 0, 2122, 32, "Best Lineup"))
+# print(select_lineup(2, 3, 0, 2122, 30, "Lowest Price"))
+
+# print(min(all_salary_combos_sum))
 # testing = cur.execute("SELECT COUNT(Name) FROM PlayerStats WHERE Position IN ('C')")
 # for i in testing:
 #     print(i)

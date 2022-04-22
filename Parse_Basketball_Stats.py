@@ -69,7 +69,9 @@ def parse_stats_by_year(year: int):
                 player_name = player_data[0].text
                 for i in range(len(player_data)):
                     if i == 0:
-                        player_info.append(unidecode.unidecode(player_data[i].text))
+                        name = unidecode.unidecode(player_data[i].text)
+                        name = name.replace("'", "")
+                        player_info.append(name)
                     elif i == 1:
                         player_info.append(player_data[i].text)
                     elif i == 3:
@@ -91,7 +93,7 @@ def parse_stats_by_year(year: int):
     return
 
 
-parse_stats_by_year(2022)
+parse_stats_by_year("2022")
 
 con.commit()
 
