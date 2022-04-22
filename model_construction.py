@@ -137,11 +137,11 @@ def guard_selections(table: str, number_players: int):
     return query
 
 
-top5 = []
-guard_ranked = cur.execute(guard_selections("GuardsNormalizedStats", 2))
-for i in guard_ranked:
-    top5.append(i[0])
-    print(i)
+# top5 = []
+# guard_ranked = cur.execute(guard_selections("GuardsNormalizedStats", 2))
+# for i in guard_ranked:
+#     top5.append(i[0])
+#     print(i)
 
 
 ###############################################################################
@@ -201,10 +201,10 @@ def forward_selections(table: str, number_players: int):
     return query
 
 
-forward_ranked = cur.execute(forward_selections("ForwardsNormalizedStats", 2))
-for i in forward_ranked:
-    top5.append(i[0])
-    print(i)
+# forward_ranked = cur.execute(forward_selections("ForwardsNormalizedStats", 2))
+# for i in forward_ranked:
+#     top5.append(i[0])
+#     print(i)
 
 # testing = cur.execute(
 #     "SELECT COUNT(Name) FROM PlayerStats WHERE Position IN ('PF', 'SF')"
@@ -267,19 +267,10 @@ def center_selections(table: str, number_players: int):
     return query
 
 
-center_ranked = cur.execute(center_selections("CentersNormalizedStats", 5))
-for i in center_ranked:
-    top5.append(i[0])
-    print(i)
-
-salaryTop5 = []
-for i in top5:
-    salary = cur.execute(f"SELECT Salary2122 FROM Salary WHERE Name = '{i}'")
-    for j in salary:
-        salaryTop5.append(j[0])
-
-# print(salaryTop5)
-# print(sum(salaryTop5))
+# center_ranked = cur.execute(center_selections("CentersNormalizedStats", 5))
+# for i in center_ranked:
+#     top5.append(i[0])
+#     print(i)
 
 
 def get_position_combinations(
@@ -383,7 +374,7 @@ def select_lineup(
     return output
 
 
-print(select_lineup(2, 3, 0, 2122, 32, "Best Lineup"))
+print(select_lineup(2, 2, 1, 2122, 90, "Best Lineup"))
 # print(select_lineup(2, 3, 0, 2122, 30, "Lowest Price"))
 
 # print(min(all_salary_combos_sum))
