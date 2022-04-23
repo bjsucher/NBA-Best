@@ -70,7 +70,8 @@ def parse_stats_by_year(year: int):
                 for i in range(len(player_data)):
                     if i == 0:
                         name = unidecode.unidecode(player_data[i].text)
-                        name = name.replace("'", "")
+                        for i in ["'", " IV", " III", " II", " Jr.", " Sr.", "."]:
+                            name = name.replace(i, "")
                         player_info.append(name)
                     elif i == 1:
                         player_info.append(player_data[i].text)

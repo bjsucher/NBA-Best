@@ -314,6 +314,9 @@ def get_position_combinations(
     return all_data
 
 
+# print(get_position_combinations("forward", 40, 1, 2122))
+
+
 def select_lineup(
     num_guard: int,
     num_forward: int,
@@ -325,7 +328,7 @@ def select_lineup(
     num_combo = 5
     output = []
     while output == []:
-        if num_combo == 25:
+        if num_combo == 45:
             print("Invalid input. Please try a higher budget or change a field.")
             break
 
@@ -360,22 +363,35 @@ def select_lineup(
             for i in all_rating_combos:
                 all_rating_combos_sum.append(sum(i))
 
-            chosen_rating = []
-            for i in salary_index:
-                chosen_rating.append(all_rating_combos_sum[i])
+            # with open("test_names.txt", "w") as f:
+            #     for t in all_name_combos:
+            #         f.write(" ".join(str(s) for s in t) + "\n")
+            # print(all_salary_combos_sum)
 
-            best_index = all_rating_combos_sum.index(max(chosen_rating))
+            best_index = 0
+            best_rating = 0
+            for i in salary_index:
+                if all_rating_combos_sum[i] > best_rating:
+                    best_rating = all_rating_combos_sum[i]
+                    best_index = i
+
             output = [all_name_combos[best_index], all_salary_combos_sum[best_index]]
 
         elif budget_choice == "Lowest Price":
-            low_index = all_salary_combos_sum.index(min(all_salary_combos_sum))
+            low_index = 0
+            lowest_salary = 500000000
+            for i in salary_index:
+                if all_salary_combos_sum[i] < lowest_salary:
+                    lowest_salary = all_salary_combos_sum[i]
+                    low_index = i
+
             output = [all_name_combos[low_index], all_salary_combos_sum[low_index]]
 
     return output
 
 
-print(select_lineup(2, 2, 1, 2122, 90, "Best Lineup"))
-# print(select_lineup(2, 3, 0, 2122, 30, "Lowest Price"))
+print(select_lineup(2, 2, 1, 2122, 10, "Best Lineup"))
+# print(select_lineup(2, 3, 0, 2122, 20, "Lowest Price"))
 
 # print(min(all_salary_combos_sum))
 # testing = cur.execute("SELECT COUNT(Name) FROM PlayerStats WHERE Position IN ('C')")
@@ -385,3 +401,9 @@ print(select_lineup(2, 2, 1, 2122, 90, "Best Lineup"))
 # test3 = cur.execute("SELECT * FROM GuardsNormalizedStats")
 # for i in test3:
 #     print(i)
+
+# test = cur.execute(
+#     "SELECT Name FROM Salary WHERE Name IN (SELECT Name FROM PlayerStats)"
+# )
+# for row in test:
+#     print(row)
