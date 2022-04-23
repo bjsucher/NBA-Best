@@ -390,7 +390,7 @@ def select_lineup(
     return output
 
 
-print(select_lineup(2, 2, 1, 2122, 10, "Best Lineup"))
+# print(select_lineup(2, 2, 1, 2122, 10, "Best Lineup"))
 # print(select_lineup(2, 3, 0, 2122, 20, "Lowest Price"))
 
 # print(min(all_salary_combos_sum))
