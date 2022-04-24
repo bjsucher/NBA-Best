@@ -68,7 +68,7 @@ while True:
     else:
         break
 
-print(select_lineup(guard, forward, center, salaryYear, budget, "Best Lineup"))
+print(select_lineup(guard, forward, center, salaryYear, budget))
 
 # could give option for minimum total salary or best combo under budget
 # give option for salary 21/22 or 22/23

@@ -322,13 +322,12 @@ def select_lineup(
     num_forward: int,
     num_center: int,
     salaryYear: int,
-    budget: float,
-    budget_choice: str,
+    budget: float
 ):
     num_combo = 5
     output = []
     while output == []:
-        if num_combo == 45:
+        if num_combo == 40:
             print("Invalid input. Please try a higher budget or change a field.")
             break
 
@@ -356,36 +355,20 @@ def select_lineup(
         if salary_index == []:
             continue
 
-        if budget_choice == "Best Lineup":
-            all_rating = [guards[1], forwards[1], centers[1]]
-            all_rating_combos = list(product(*all_rating))
-            all_rating_combos_sum = []
-            for i in all_rating_combos:
-                all_rating_combos_sum.append(sum(i))
+        all_rating = [guards[1], forwards[1], centers[1]]
+        all_rating_combos = list(product(*all_rating))
+        all_rating_combos_sum = []
+        for i in all_rating_combos:
+            all_rating_combos_sum.append(sum(i))
 
-            # with open("test_names.txt", "w") as f:
-            #     for t in all_name_combos:
-            #         f.write(" ".join(str(s) for s in t) + "\n")
-            # print(all_salary_combos_sum)
+        best_index = 0
+        best_rating = 0
+        for i in salary_index:
+            if all_rating_combos_sum[i] > best_rating:
+                best_rating = all_rating_combos_sum[i]
+                best_index = i
 
-            best_index = 0
-            best_rating = 0
-            for i in salary_index:
-                if all_rating_combos_sum[i] > best_rating:
-                    best_rating = all_rating_combos_sum[i]
-                    best_index = i
-
-            output = [all_name_combos[best_index], all_salary_combos_sum[best_index]]
-
-        elif budget_choice == "Lowest Price":
-            low_index = 0
-            lowest_salary = 500000000
-            for i in salary_index:
-                if all_salary_combos_sum[i] < lowest_salary:
-                    lowest_salary = all_salary_combos_sum[i]
-                    low_index = i
-
-            output = [all_name_combos[low_index], all_salary_combos_sum[low_index]]
+        output = [all_name_combos[best_index], all_salary_combos_sum[best_index]]
 
     return output
 
