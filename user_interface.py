@@ -1,4 +1,11 @@
 from model_construction import select_lineup
+import sqlite3
+import pandas as pd
+from IPython.display import display
+from tabulate import tabulate
+
+con = sqlite3.connect("nba.db")
+cur = con.cursor()
 
 print(
     """
@@ -233,6 +240,93 @@ print(
         blocks,
     )
 )
+
+best_lineup = select_lineup(
+    guard,
+    forward,
+    center,
+    salaryYear,
+    budget,
+    points,
+    twos,
+    threes,
+    free_throw,
+    def_reb,
+    off_reb,
+    ato,
+    steals,
+    blocks,
+)
+
+# Remove salaries from lineup lists
+names = []
+for lineup in best_lineup:
+    lineup.pop()
+    names.append(lineup)
+
+# Convert from tuples to lists
+best_lineup_names = []
+for lineup in names:
+    for position in lineup:
+        best_lineup_names.append(list(position))
+
+# Convert from lists of tuples to lists of strings
+best_lineup_names2 = []
+for lineup in best_lineup_names:
+    list_names = [i for sub in lineup for i in sub]
+    best_lineup_names2.append(list_names)
+
+
+# Select player stats for players in the best lineup
+stats_list = []
+for j in range(0, 5):
+    name = best_lineup_names2[0][j]
+    stats_list.append(
+        cur.execute(
+            f"""SELECT Name, Position, Points, OffensiveRebounds, DefensiveRebounds,
+            Assists, Turnovers, Steals, Blocks FROM PlayerStats WHERE Name = ('{name}')""",
+        ).fetchone()
+    )
+
+# Convert to pandas data frame
+df = pd.DataFrame(
+    stats_list,
+    columns=[
+        "Name",
+        "Position",
+        "Points",
+        "Offensive Rebounds",
+        "Defensive Rebounds",
+        "Assists",
+        "Turnovers",
+        "Steals",
+        "Blocks",
+    ],
+)
+
+# Create headers for table
+table_headers = headers = [
+    "Name",
+    "Position",
+    "Points",
+    "Offensive Rebounds",
+    "Defensive Rebounds",
+    "Assists",
+    "Turnovers",
+    "Steals",
+    "Blocks",
+]
+
+# Print table with player stats for best lineup
+print(
+    tabulate(
+        df,
+        headers=table_headers,
+        tablefmt="psql",
+    )
+)
+
+#  WHERE Name IN ({best_lineup})
 
 # give option for how many lineups to output
 # output salary
