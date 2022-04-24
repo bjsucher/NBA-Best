@@ -234,8 +234,7 @@ print(
     )
 )
 
-# could give option for minimum total salary or best combo under budget
-# give option for salary 21/22 or 22/23
-# give option for how many guards, forwards, and centers
 # give option for how many lineups to output
 # output salary
+# Visualizations: Other top lineups besides the best lineup, show key stats
+# Could also show top lineups if budget was increased by a $5M, $10M, etc.

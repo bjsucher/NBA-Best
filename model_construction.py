@@ -436,7 +436,8 @@ def select_lineup(
 ):
     num_combo = 5
     output = []
-    while output == []:
+    used_combos = []
+    while len(output) < 5:
         if num_combo == 40:
             print("Invalid input. Please try a higher budget or change a field.")
             break
@@ -511,13 +512,21 @@ def select_lineup(
         for i in all_rating_combos:
             all_rating_combos_sum.append(sum(i))
 
-        best_index = 0
-        best_rating = 0
-        for i in salary_index:
-            if all_rating_combos_sum[i] > best_rating:
-                best_rating = all_rating_combos_sum[i]
-                best_index = i
+        while len(output) < 5 and salary_index != []:
+            best_index = 0
+            best_rating = 0
+            for i in salary_index:
+                if all_rating_combos_sum[i] > best_rating:
+                    best_rating = all_rating_combos_sum[i]
+                    best_index = i
 
-        output = [all_name_combos[best_index], all_salary_combos_sum[best_index]]
+            if all_name_combos[best_index] in used_combos:
+                salary_index.remove(best_index)
+            else:
+                output.append(
+                    [all_name_combos[best_index], all_salary_combos_sum[best_index]]
+                )
+                used_combos.append(all_name_combos[best_index])
+                salary_index.remove(best_index)
 
     return output
