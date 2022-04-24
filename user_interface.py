@@ -68,7 +68,171 @@ while True:
     else:
         break
 
-print(select_lineup(guard, forward, center, salaryYear, budget))
+print(
+    """If you would like to add weights to certain statistics, input a number
+    between 0 and 10. Decimals work. A weight of 0 takes out that statistic from
+    the formula. The default weight for each statistic is 1. If you do not wish
+    to add weights, press 'Enter' for each prompt. Statistcs are Points, 
+    True Two Point Percentage, True Three Point Percentage, Free Throw 
+    Percentage, Defensive Rebounding, Offensive Rebounding, Assist to Turnover 
+    Ratio, Steals and Blocks."""
+)
+
+ato = 1.0
+steals = 1.0
+threes = 1.0
+off_reb = 1.0
+free_throw = 1.0
+twos = 1.0
+points = 1.0
+def_reb = 1.0
+blocks = 1.0
+
+while True:
+    try:
+        points_input = input("""Points: """)
+        if points_input == "":
+            next
+        else:
+            points = float(points_input)
+
+    except ValueError:
+        print("Invalid input. Put a number 0-10 or press 'Enter' to keep the default.")
+
+    else:
+        break
+
+while True:
+    try:
+        twos_input = input("""True Two Point Percentage: """)
+        if twos_input == "":
+            next
+        else:
+            twos = float(twos_input)
+
+    except ValueError:
+        print("Invalid input. Put a number 0-10 or press 'Enter' to keep the default.")
+
+    else:
+        break
+
+while True:
+    try:
+        threes_input = input("""True Three Point Percentage: """)
+        if threes_input == "":
+            next
+        else:
+            threes = float(threes_input)
+
+    except ValueError:
+        print("Invalid input. Put a number 0-10 or press 'Enter' to keep the default.")
+
+    else:
+        break
+
+while True:
+    try:
+        free_throw_input = input("""Free Throw Percentage: """)
+        if free_throw_input == "":
+            next
+        else:
+            free_throw = float(free_throw_input)
+
+    except ValueError:
+        print("Invalid input. Put a number 0-10 or press 'Enter' to keep the default.")
+
+    else:
+        break
+
+while True:
+    try:
+        def_reb_input = input("""Defensive Rebounding: """)
+        if def_reb_input == "":
+            next
+        else:
+            def_reb = float(def_reb_input)
+
+    except ValueError:
+        print("Invalid input. Put a number 0-10 or press 'Enter' to keep the default.")
+
+    else:
+        break
+
+while True:
+    try:
+        off_reb_input = input("""Offensive Rebounding: """)
+        if off_reb_input == "":
+            next
+        else:
+            off_reb = float(off_reb_input)
+
+    except ValueError:
+        print("Invalid input. Put a number 0-10 or press 'Enter' to keep the default.")
+
+    else:
+        break
+
+while True:
+    try:
+        ato_input = input("""Assist to Turnover Ratio: """)
+        if ato_input == "":
+            next
+        else:
+            ato = float(ato_input)
+
+    except ValueError:
+        print("Invalid input. Put a number 0-10 or press 'Enter' to keep the default.")
+
+    else:
+        break
+
+while True:
+    try:
+        steals_input = input("""Steals: """)
+        if steals_input == "":
+            next
+        else:
+            steals = float(steals_input)
+
+    except ValueError:
+        print("Invalid input. Put a number 0-10 or press 'Enter' to keep the default.")
+
+    else:
+        break
+
+while True:
+    try:
+        blocks_input = input("""Blocks: """)
+        if blocks_input == "":
+            next
+        else:
+            blocks = float(blocks_input)
+
+    except ValueError:
+        print("Invalid input. Put a number 0-10 or press 'Enter' to keep the default.")
+
+    else:
+        break
+
+
+print(
+    select_lineup(
+        guard,
+        forward,
+        center,
+        salaryYear,
+        budget,
+        points,
+        twos,
+        threes,
+        free_throw,
+        def_reb,
+        off_reb,
+        ato,
+        steals,
+        blocks,
+    )
+)
 
 # could give option for minimum total salary or best combo under budget
 # give option for salary 21/22 or 22/23

@@ -325,19 +325,66 @@ for i in top5:
         salaryTop5.append(j[0])
 
 
-
-
 def get_position_combinations(
-    type: str, numPlayers: int, numInLineup: int, salaryYear: int
+    type: str,
+    numPlayers: int,
+    numInLineup: int,
+    salaryYear: int,
+    points: float,
+    twos: float,
+    threes: float,
+    free_throw: float,
+    def_reb: float,
+    off_reb: float,
+    ato: float,
+    steals: float,
+    blocks: float,
 ):
     name = []
     rating = []
     if type == "guard":
-        data = cur.execute(guard_selections("GuardsNormalizedStats", numPlayers))
+        data = cur.execute(
+            guard_selections(
+                "GuardsNormalizedStats",
+                numPlayers,
+                threes,
+                ato,
+                steals,
+                off_reb,
+                free_throw,
+                twos,
+                points,
+            )
+        )
     elif type == "forward":
-        data = cur.execute(forward_selections("ForwardsNormalizedStats", numPlayers))
+        data = cur.execute(
+            forward_selections(
+                "ForwardsNormalizedStats",
+                numPlayers,
+                threes,
+                ato,
+                def_reb,
+                off_reb,
+                free_throw,
+                twos,
+                blocks,
+                points,
+            )
+        )
     elif type == "center":
-        data = cur.execute(center_selections("CentersNormalizedStats", numPlayers))
+        data = cur.execute(
+            center_selections(
+                "CentersNormalizedStats",
+                numPlayers,
+                ato,
+                def_reb,
+                off_reb,
+                free_throw,
+                twos,
+                blocks,
+                points,
+            )
+        )
 
     for i in data:
         name.append(i[0])
@@ -376,7 +423,16 @@ def select_lineup(
     num_forward: int,
     num_center: int,
     salaryYear: int,
-    budget: float
+    budget: float,
+    points: float,
+    twos: float,
+    threes: float,
+    free_throw: float,
+    def_reb: float,
+    off_reb: float,
+    ato: float,
+    steals: float,
+    blocks: float,
 ):
     num_combo = 5
     output = []
@@ -385,11 +441,51 @@ def select_lineup(
             print("Invalid input. Please try a higher budget or change a field.")
             break
 
-        guards = get_position_combinations("guard", num_combo, num_guard, salaryYear)
-        forwards = get_position_combinations(
-            "forward", num_combo, num_forward, salaryYear
+        guards = get_position_combinations(
+            "guard",
+            num_combo,
+            num_guard,
+            salaryYear,
+            points,
+            twos,
+            threes,
+            free_throw,
+            def_reb,
+            off_reb,
+            ato,
+            steals,
+            blocks,
         )
-        centers = get_position_combinations("center", num_combo, num_center, salaryYear)
+        forwards = get_position_combinations(
+            "forward",
+            num_combo,
+            num_forward,
+            salaryYear,
+            points,
+            twos,
+            threes,
+            free_throw,
+            def_reb,
+            off_reb,
+            ato,
+            steals,
+            blocks,
+        )
+        centers = get_position_combinations(
+            "center",
+            num_combo,
+            num_center,
+            salaryYear,
+            points,
+            twos,
+            threes,
+            free_throw,
+            def_reb,
+            off_reb,
+            ato,
+            steals,
+            blocks,
+        )
         num_combo += 1
 
         all_name = [guards[0], forwards[0], centers[0]]
@@ -425,7 +521,3 @@ def select_lineup(
         output = [all_name_combos[best_index], all_salary_combos_sum[best_index]]
 
     return output
-
-
-
-
