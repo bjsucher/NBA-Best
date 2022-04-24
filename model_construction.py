@@ -98,7 +98,8 @@ def guard_normalize_query(position: str):
                     position)},3) AS j_ft,
                 ROUND((TwoPointersAttempted * TwoPointersPct) /
                     {get_max("TwoPointersAttempted * TwoPointersPct",
-                    position)},3) AS j_twos
+                    position)},3) AS j_twos,
+                ROUND(("Points") / {get_max("Points", position)}) AS j_points
             FROM PlayerStats ps
             LEFT JOIN Salary s
             ON ps.Name = s.Name
@@ -124,12 +125,23 @@ con.commit()
 #     print(i)
 
 
-def guard_selections(table: str, number_players: int):
+def guard_selections(
+    table: str,
+    number_players: int,
+    w1: float,
+    w2: float,
+    w3: float,
+    w4: float,
+    w5: float,
+    w6: float,
+    w7: float,
+):
     "Make Selections."
     query = f"""
     SELECT
         Name,
-        (j_threes + j_atr + j_stl + j_or + j_ft + j_twos) * (100 / 6) AS rank
+        ({w1} * j_threes) + ({w2} * j_atr) + ({w3} * j_stl) + ({w4} * j_or) +
+        ({w5} * j_ft) + ({w6} * j_twos) + ({w7} * j_points) AS rank
     FROM {table}
     ORDER BY rank DESC
     LIMIT {number_players}
@@ -137,11 +149,14 @@ def guard_selections(table: str, number_players: int):
     return query
 
 
-# top5 = []
-# guard_ranked = cur.execute(guard_selections("GuardsNormalizedStats", 2))
-# for i in guard_ranked:
-#     top5.append(i[0])
-#     print(i)
+top5 = []
+guard_ranked = cur.execute(
+    guard_selections("GuardsNormalizedStats", 2, 3, 3, 2, 1, 4, 2, 3)
+)
+for i in guard_ranked:
+    top5.append(i[0])
+    print(i)
+print("break")
 
 
 ###############################################################################
@@ -171,7 +186,8 @@ def forward_normalize_query(position: str):
                 ROUND((TwoPointersAttempted * TwoPointersPct) /
                     {get_max("TwoPointersAttempted * TwoPointersPct",
                     position)},3) AS j_twos,
-                ROUND(Blocks / {get_max("Blocks", position)}, 3) AS j_blocks
+                ROUND(Blocks / {get_max("Blocks", position)}, 3) AS j_blocks,
+                ROUND(Points / {get_max("Points", position)}, 3) AS j_points
             FROM PlayerStats ps
             LEFT JOIN Salary s
             ON ps.Name = s.Name
@@ -188,12 +204,25 @@ cur.execute(forward_normalize_query("'PF', 'SF'"))
 con.commit()
 
 
-def forward_selections(table: str, number_players: int):
+def forward_selections(
+    table: str,
+    number_players: int,
+    w1: float,
+    w2: float,
+    w3: float,
+    w4: float,
+    w5: float,
+    w6: float,
+    w7: float,
+    w8: float,
+):
     "Make Selections."
     query = f"""
-    SELECT 
+    SELECT
         Name,
-        (j_threes + j_atr + j_dr + j_or + j_ft + j_twos + j_blocks) * (100 / 7) AS rank
+        ({w1} * j_threes) + ({w2} * j_atr) + ({w3} * j_dr) + ({w4} * j_or) +
+        ({w5} * j_ft) + ({w6} * j_twos) + ({w7} * j_blocks) + ({w8} *j_points)
+            AS rank
     FROM {table}
     ORDER BY rank DESC
     LIMIT {number_players}
@@ -201,10 +230,13 @@ def forward_selections(table: str, number_players: int):
     return query
 
 
-# forward_ranked = cur.execute(forward_selections("ForwardsNormalizedStats", 2))
-# for i in forward_ranked:
-#     top5.append(i[0])
-#     print(i)
+forward_ranked = cur.execute(
+    forward_selections("ForwardsNormalizedStats", 2, 2, 2, 3, 3, 3, 3, 4, 3)
+)
+for i in forward_ranked:
+    top5.append(i[0])
+    print(i)
+print("break")
 
 # testing = cur.execute(
 #     "SELECT COUNT(Name) FROM PlayerStats WHERE Position IN ('PF', 'SF')"
@@ -237,7 +269,8 @@ def center_normalize_query(position: str):
                 ROUND((TwoPointersAttempted * TwoPointersPct) /
                     {get_max("TwoPointersAttempted * TwoPointersPct",
                     position)},3) AS j_twos,
-                ROUND(Blocks / {get_max("Blocks", position)}, 3) AS j_blocks
+                ROUND(Blocks / {get_max("Blocks", position)}, 3) AS j_blocks,
+                ROUND(Points / {get_max("Points", position)}, 3) AS j_points
             FROM PlayerStats ps
             LEFT JOIN Salary s
             ON ps.Name = s.Name
@@ -254,12 +287,23 @@ cur.execute(center_normalize_query("'C'"))
 con.commit()
 
 
-def center_selections(table: str, number_players: int):
+def center_selections(
+    table: str,
+    number_players: int,
+    w1: float,
+    w2: float,
+    w3: float,
+    w4: float,
+    w5: float,
+    w6: float,
+    w7: float,
+):
     "Make Selections."
     query = f"""
-    SELECT 
+    SELECT
         Name,
-        (j_atr + j_dr + j_or + j_ft + j_twos + j_blocks) * (100 / 6) AS rank
+        ({w1} * j_atr) + ({w2} * j_dr) + ({w3} * j_or) + ({w4} * j_ft) +
+        ({w5} * j_twos) + ({w6} * j_blocks) + ({w7} * j_points) AS rank
     FROM {table}
     ORDER BY rank DESC
     LIMIT {number_players}
@@ -267,10 +311,20 @@ def center_selections(table: str, number_players: int):
     return query
 
 
-# center_ranked = cur.execute(center_selections("CentersNormalizedStats", 5))
-# for i in center_ranked:
-#     top5.append(i[0])
-#     print(i)
+center_ranked = cur.execute(
+    center_selections("CentersNormalizedStats", 1, 7, 3, 5, 8, 2, 4, 4)
+)
+for i in center_ranked:
+    top5.append(i[0])
+    print(i)
+
+salaryTop5 = []
+for i in top5:
+    salary = cur.execute(f"SELECT Salary2122 FROM Salary WHERE Name = '{i}'")
+    for j in salary:
+        salaryTop5.append(j[0])
+
+
 
 
 def get_position_combinations(
@@ -373,20 +427,5 @@ def select_lineup(
     return output
 
 
-# print(select_lineup(2, 2, 1, 2122, 10, "Best Lineup"))
-# print(select_lineup(2, 3, 0, 2122, 20, "Lowest Price"))
 
-# print(min(all_salary_combos_sum))
-# testing = cur.execute("SELECT COUNT(Name) FROM PlayerStats WHERE Position IN ('C')")
-# for i in testing:
-#     print(i)
 
-# test3 = cur.execute("SELECT * FROM GuardsNormalizedStats")
-# for i in test3:
-#     print(i)
-
-# test = cur.execute(
-#     "SELECT Name FROM Salary WHERE Name IN (SELECT Name FROM PlayerStats)"
-# )
-# for row in test:
-#     print(row)
