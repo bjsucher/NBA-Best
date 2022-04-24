@@ -9,28 +9,64 @@ season or next season), and your budget.
 """
 )
 
-guard, forward, center = input(
-    """Enter the number of guards, forwards, and centers in the lineup separated 
-    by a comma (ex. 2,2,1 would be a 2 guard, 2 forward, 1 center lineup): """
-).split(",", 2)
-guard = int(guard)
-forward = int(forward)
-center = int(center)
+while True:
+    try:
+        guard, forward, center = input(
+            """Enter the number of guards, forwards, and centers in the lineup separated 
+            by a comma (ex. 2,2,1 would be a 2 guard, 2 forward, 1 center lineup): """
+        ).split(",", 2)
+        guard = int(guard)
+        forward = int(forward)
+        center = int(center)
 
-salaryInput = input(
-    """Enter the salary year you would like to use (enter 1 for this season (2021-22) 
-    or 2 for next season (2022-23)): """
-)
+        if (
+            guard not in [0, 1, 2, 3, 4, 5]
+            or forward not in [0, 1, 2, 3, 4, 5]
+            or center not in [0, 1, 2, 3, 4, 5]
+        ):
+            raise ValueError("Not numbers")
+        elif guard + forward + center != 5:
+            raise ValueError("Sum to 5")
+
+    except ValueError as e:
+        if str(e) == "Not numbers":
+            print("Please choose a number 0-5 for each position separated by a comma.")
+        elif str(e) == "Sum to 5":
+            print("Please make sure the total number of players sums to 5.")
+    else:
+        break
+
+salaryInput = ""
+while True:
+    try:
+        salaryInput = input(
+            """Enter the salary year you would like to use (enter 1 for this season (2021-22) 
+        or 2 for next season (2022-23)): """
+        )
+        if salaryInput not in ["1", "2"]:
+            raise ValueError("Invalid input.")
+
+    except ValueError:
+        print("Please enter 1 or 2.")
+    else:
+        break
+
 salaryYear = 2122
 if salaryInput == "2":
     salaryYear = 2223
 
-budget = float(
-    input(
-        """Enter the budget of the 5-man lineup (in millions). You can use a decimal but 
-    please put in a number: """
-    )
-)
+while True:
+    try:
+        budget = float(
+            input(
+                """Enter the budget of the 5-man lineup (in millions). 
+            You can use a decimal but please put in a number: """
+            )
+        )
+    except ValueError:
+        print("That is not a number. Try again!")
+    else:
+        break
 
 print(select_lineup(guard, forward, center, salaryYear, budget, "Best Lineup"))
 
