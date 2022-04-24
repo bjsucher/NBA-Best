@@ -42,6 +42,7 @@ for player in all_players:
     player_data = player.find_all("td")
     name = player_data[1].find("a").text.strip()
     name = name.replace("'", "")
+    name = name.replace(" Jr", "")
     year2122 = int(player_data[2].get("data-value"))
     if player_data[3].get("data-value") == "0":
         year2223 = year2122
