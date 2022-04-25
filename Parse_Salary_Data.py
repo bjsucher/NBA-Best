@@ -1,3 +1,4 @@
+"""Parses player salary data from https://hoopshype.com/salaries/players/"""
 from pytest import skip
 import requests
 from bs4 import BeautifulSoup

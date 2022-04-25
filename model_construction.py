@@ -283,6 +283,8 @@ def get_position_combinations(
     steals: float,
     blocks: float,
 ):
+    """Gets all the combinations for the position desired based on the user
+    input criteria"""
     name = []
     rating = []
     if type == "guard":
@@ -374,6 +376,10 @@ def select_lineup(
     steals: float,
     blocks: float,
 ):
+    """Gets the lineup based on the user input. Runs the functions above to get the
+    different combinations. Starts with the top 5 players at each position, and goes
+    up to the top 40 incrementally by 1 until it gets a lineup that meets the criteria.
+    Prints a line that tells the user to change the input if no lineup is found."""
     num_combo = 5
     output = []
     used_combos = []

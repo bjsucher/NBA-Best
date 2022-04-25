@@ -1,3 +1,5 @@
+"""Parse the basketball statistics data from 
+https://www.basketball-reference.com/leagues/NBA_2022_per_game.html"""
 import sqlite3
 import os
 import requests
@@ -43,6 +45,8 @@ cur.execute(
 
 
 def parse_stats_by_year(year: int):
+    """Parses the statistics by year. Currently we only use 2022 data but function
+    can be used to grab data from other years as well"""
     URL = "https://www.basketball-reference.com/leagues/NBA_" + year + "_per_game.html"
     page = requests.get(URL)
 
