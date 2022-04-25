@@ -1,8 +1,9 @@
 from model_construction import select_lineup
 import sqlite3
 import pandas as pd
-from IPython.display import display
 from tabulate import tabulate
+import numpy as np
+import matplotlib.pyplot as plt
 
 con = sqlite3.connect("nba.db")
 cur = con.cursor()
@@ -279,14 +280,15 @@ for lineup in best_lineup_names:
 
 # Select player stats for players in the best lineup
 stats_list = []
-for j in range(0, 5):
-    name = best_lineup_names2[0][j]
-    stats_list.append(
-        cur.execute(
-            f"""SELECT Name, Position, Points, OffensiveRebounds, DefensiveRebounds,
-            Assists, Turnovers, Steals, Blocks FROM PlayerStats WHERE Name = ('{name}')""",
-        ).fetchone()
-    )
+for i in range(0, 5):
+    for j in range(0, 5):
+        name = best_lineup_names2[i][j]
+        stats_list.append(
+            cur.execute(
+                f"""SELECT Name, Position, Points, OffensiveRebounds, DefensiveRebounds,
+                Assists, Turnovers, Steals, Blocks FROM PlayerStats WHERE Name = ('{name}')""",
+            ).fetchone()
+        )
 
 # Convert to pandas data frame
 df = pd.DataFrame(
@@ -317,18 +319,26 @@ table_headers = headers = [
     "Blocks",
 ]
 
-# Print table with player stats for best lineup
+# Drop duplicates in dataframe
+df1 = df.drop_duplicates()
+
+# Print table with player stats for all players in the top 5 lineups
 print(
     tabulate(
-        df,
+        df1.reset_index(drop=True),
         headers=table_headers,
         tablefmt="psql",
     )
 )
 
-#  WHERE Name IN ({best_lineup})
+# Create a graph with all the average points per player for the top lineup given
+for j in range(0, 5):
+    # i = 0
+    name = best_lineup_names2[0][j]
+    sql = f"""SELECT Name, Points FROM PlayerStats WHERE Name = ('{name}')"""
+    # i += 1
+    data = pd.read_sql(sql, con)
+    plt.scatter(data.Name, data.Points)
+    plt.title("Points Per Player")
 
-# give option for how many lineups to output
-# output salary
-# Visualizations: Other top lineups besides the best lineup, show key stats
-# Could also show top lineups if budget was increased by a $5M, $10M, etc.
+plt.show()
