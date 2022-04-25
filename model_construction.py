@@ -24,27 +24,6 @@ def get_max(column: str, position: str):
     return max.fetchone()[0]
 
 
-# print(get_max("ThreePointersPct"))
-# print(get_max("Assists"))
-# print(get_max("Turnovers"))
-# print("start")
-# test_pos = "'PG', 'SG'"
-# print(get_max("TwoPointersAttempted", test_pos))
-# print(get_max("TwoPointersPct", test_pos))
-
-# attempt2 = cur.execute("SELECT Name FROM PlayerStats WHERE TwoPointersAttempted = 16.2")
-# print(attempt2.fetchone())
-
-# the highest 2ptPct is .673, Matisse Thybulle, but his avg 2pAttempt is only
-# 2.4.... should I include him?
-# I think it is actually ok because we are also multiplying by the number of 2
-# pointers made, so his score wont actually be the highest (likely)
-
-# pct2 = cur.execute(
-#     "SELECT Name, TwoPointersAttempted FROM PlayerStats WHERE TwoPointersPct = .673"
-# )
-# print(pct2.fetchone())
-
 # My idea is to normalize each of the metrics by the maximum value in all of
 # the data, since this is a competition then we can compare individuals to
 # others
@@ -54,24 +33,9 @@ def get_max(column: str, position: str):
 # in that same position, which is very fair. BUT I am going to start more
 # simple than that.
 
-# UPDATE: I added in the funcitonality to only include players in that position
+# UPDATE: I added in the functionality to only include players in that position
 # for the maximum calculation.
 
-# ass_turn = cur.execute(
-#     """SELECT Name FROM PlayerStats WHERE (Assists / Turnovers) > 7 AND
-#     GamesPlayed > 15 AND ThreePointersAttempted > 2"""
-# )
-# print(ass_turn.fetchall())
-
-# tyus_jones = cur.execute(
-#     """SELECT
-#         GamesPlayed,
-#         Assists,
-#         Turnovers
-#     FROM PlayerStats WHERE Name = 'Tyus Jones'
-#     """
-# )
-# print(tyus_jones.fetchone())
 
 ###############################################################################
 # Guards
@@ -112,17 +76,8 @@ def guard_normalize_query(position: str):
 
 
 cur.execute("DROP TABLE IF EXISTS GuardsNormalizedStats")
-# print(guard_normalize_query("'PG', 'SG'"))
 cur.execute(guard_normalize_query("'PG', 'SG'"))
 con.commit()
-
-# This was useful before I created the table as the select statement
-# guards = cur.execute(normalize_query("'PG', 'SG'"))
-# for i in guards:
-#     print(i)
-# guards = cur.execute("SELECT * FROM GuardsNormalizedStats")
-# for i in guards:
-#     print(i)
 
 
 def guard_selections(
@@ -155,8 +110,6 @@ guard_ranked = cur.execute(
 )
 for i in guard_ranked:
     top5.append(i[0])
-    print(i)
-print("break")
 
 
 ###############################################################################
@@ -235,15 +188,6 @@ forward_ranked = cur.execute(
 )
 for i in forward_ranked:
     top5.append(i[0])
-    print(i)
-print("break")
-
-# testing = cur.execute(
-#     "SELECT COUNT(Name) FROM PlayerStats WHERE Position IN ('PF', 'SF')"
-# )
-# for i in testing:
-#     print(i)
-
 
 ###############################################################################
 # Centers
@@ -316,7 +260,6 @@ center_ranked = cur.execute(
 )
 for i in center_ranked:
     top5.append(i[0])
-    print(i)
 
 salaryTop5 = []
 for i in top5:
@@ -413,9 +356,6 @@ def get_position_combinations(
     all_data = [name_combos, rating_combo_sum, salary_combo_sum]
 
     return all_data
-
-
-# print(get_position_combinations("forward", 40, 1, 2122))
 
 
 def select_lineup(
