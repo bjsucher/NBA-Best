@@ -325,8 +325,6 @@ for i in top5:
         salaryTop5.append(j[0])
 
 
-
-
 def get_position_combinations(
     type: str, numPlayers: int, numInLineup: int, salaryYear: int
 ):
@@ -372,11 +370,7 @@ def get_position_combinations(
 
 
 def select_lineup(
-    num_guard: int,
-    num_forward: int,
-    num_center: int,
-    salaryYear: int,
-    budget: float
+    num_guard: int, num_forward: int, num_center: int, salaryYear: int, budget: float
 ):
     num_combo = 5
     output = []
@@ -425,7 +419,3 @@ def select_lineup(
         output = [all_name_combos[best_index], all_salary_combos_sum[best_index]]
 
     return output
-
-
-
-
