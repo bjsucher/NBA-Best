@@ -278,7 +278,7 @@ for lineup in best_lineup_names:
     best_lineup_names2.append(list_names)
 
 
-# Select player stats for players in the best lineup
+# Select player stats for players in the best lineups
 stats_list = []
 for i in range(0, 5):
     for j in range(0, 5):
